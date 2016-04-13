@@ -6,7 +6,7 @@
 # database. Currently supports
 # - genomic coordinate queries
 # - bedfile upload queries
-# TODO gene id queries
+# - gene id queries
 
 
 import MySQLdb as mdb

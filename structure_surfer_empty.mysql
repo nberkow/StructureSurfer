@@ -1,6 +1,6 @@
 -- MySQL dump 10.14  Distrib 5.5.47-MariaDB, for Linux (x86_64)
 --
--- Host: tesla.pcbi.upenn.edu    Database: nberk
+-- Host: tesla.pcbi.upenn.edu    Database: structure_surfer 
 -- ------------------------------------------------------
 -- Server version	5.0.95-log
 
@@ -19,29 +19,11 @@
 -- Not dumping tablespaces as no INFORMATION_SCHEMA.FILES table on this server
 --
 
---
--- Table structure for table `gene_info`
---
+CREATE DATABASE structure_surfer;
+USE structure_surfer;
+CREATE USER 'ss_user' IDENTIFIED BY 'ea8dd48b0a35c9c92281b68193eec33b';
+GRANT SELECT ON structure_surfer.* TO 'ss_user' IDENTIFIED BY 'ea8dd48b0a35c9c92281b68193eec33b';
 
-DROP TABLE IF EXISTS `gene_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gene_info` (
-  `gene_symbol` varchar(255) default NULL,
-  `motif_id` varchar(255) NOT NULL default '',
-  `Species` varchar(255) default NULL,
-  `IUPAC` varchar(255) default NULL,
-  PRIMARY KEY  (`motif_id`),
-  UNIQUE KEY `motif_id` (`motif_id`),
-  KEY `symbol_index` (`gene_symbol`),
-  KEY `symbol_gi_index` (`gene_symbol`),
-  KEY `rc__index` (`motif_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `structure_score`
---
 
 DROP TABLE IF EXISTS `structure_score`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

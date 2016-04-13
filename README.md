@@ -24,6 +24,11 @@ This makes an empty database with three tables:
 #### Browsing The Database
 structurePlotMaker.py is a tool for browsing the database. It can take a few types of requests. It generates a table of results in plaintext and in xml and an xml plot.
 
+###### Python requirements
+pygal
+MySQLdb
+
+
 ###### Get scores from all datasets using genomic coordinate
 >python2.7 makeStructurePlot.py -c chr7 -s 45459777 -e 45459811 -g mm -pfx my_output_file
 
