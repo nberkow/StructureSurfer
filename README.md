@@ -13,7 +13,10 @@ You will need mySQL installed and a user account with the ability to GRANT SELEC
 mysql -p < structure_surfer.mysql
 
 This creates a database with three tables:
- structure_score 
- structure_source
- transcript      
+
+structure_score 
+
+structure_source
+
+transcript      
 
