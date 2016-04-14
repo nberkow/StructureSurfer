@@ -29,6 +29,7 @@ structurePlotMaker.py is a tool for browsing the database. It can handle a few t
 
 ###### Python requirements
 pygal
+
 MySQLdb
 
 
