@@ -5,7 +5,7 @@ Structure Surfer is a web tool for scientists who want to browse RNA secondary s
 
 http://tesla.pcbi.upenn.edu/structuresurfer
 
-This repository contains the database as a mySQL dump file for users who want to install it themselves rather than use the web tool. It also contains the Python script that the webtool uses to browse the database.
+This repository contains a mySQL dump file for users who want to install it themselves rather than use the web tool. It also contains the Python script that the webtool uses to browse the database.
 
 #### Creating The Database
 The full Structure Surfur database is available as mySQL dump file at pennbox. No login is required.
