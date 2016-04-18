@@ -5,27 +5,31 @@ Structure Surfer is a web tool for scientists who want to browse RNA secondary s
 
 http://tesla.pcbi.upenn.edu/structuresurfer
 
-This repository contains the database as a mySQL dump file for users who want to install it themselves rather than use the web tool. It also contains the Python script that the webtool uses to browse the database.
+This repository contains a mySQL dump file for users who want to install it themselves rather than use the web tool. It also contains the Python script that the webtool uses to browse the database.
 
 #### Creating The Database
+The full Structure Surfur database is available as mySQL dump file at pennbox. No login is required.
+
+https://upenn.app.box.com/s/1kj2f1w994sp3jmaakqhy9cw2w11vajk
+
 You will need mySQL installed and a user account with the ability to GRANT SELECT priviledges. Run this command:
 >mysql -p < structure_surfer.mysql
 
-This makes an empty database with three tables:
+Alternately, you can create an empty Structure Surfur database for your own data with the mySQL dump file in this folder.
+
+Both methods make a database with three tables:
 >structure_score - RNA secondary structure scores with genomic coordinates
 
 >structure_source - The experiments that generates the scores
 
 >transcript - Exon coordinates for transcripts
 
-#### Populating the database
-# TODO
-
 #### Browsing The Database
-structurePlotMaker.py is a tool for browsing the database. It can take a few types of requests. It generates a table of results in plaintext and in xml and an xml plot.
+structurePlotMaker.py is a tool for browsing the database. It can handle a few types of requests. It generates a table of results in plaintext and in xml as well as an xml plot.
 
 ###### Python requirements
 pygal
+
 MySQLdb
 
 
