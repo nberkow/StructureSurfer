@@ -36,8 +36,6 @@ class StructurePlotHandler:
            8 : "atDMS_rep2",
            9 : "ds_ss_RNAse_Seq",
           10 : "At_li_et_al"
-          #11 : "At_polyA_2",
-          #12 : "At_polyA_1"
          }
 
         self.invert = set([3,4,5])
@@ -61,7 +59,7 @@ class StructurePlotHandler:
 
         spm = StructurePlotMaker.StructurePlotMaker()
         summ_data = self.run_coord_search(chrom, start, end, spm)
-        interval_len = end - start
+        interval_len = end - start 
         summary = self.format_report(summ_data, interval_len)
         graph = self.make_summary_graph(summ_data, interval_len)
         report = self.format_for_load(summ_data, interval_len, range(start,end))
@@ -200,13 +198,35 @@ class StructurePlotHandler:
 
     def run_transcript_search(self, transcript_id, spm):
         data_sets = []
+		
+
+        # In transcript mode, positions are given in absolute chromosomal pos 
+        # they need to be be relative to TRANSCRIPT start
+        spm.get_abs_exon_coords(transcript_id)
+        cum_rel_pos_lookup = {}
+        cum_rel_pos = 0
+        for ex in spm.exon_coords:
+             cum_rel_pos_lookup[ex] = cum_rel_pos
+             cum_rel_pos = cum_rel_pos + (ex[1] - ex[0])
+             #print ex[1] - ex[0]
+        #print cum_rel_pos_lookup
+
         for s in self.sources:
             spm.transid_to_query(transcript_id, s)
-            spm.get_abs_exon_coords(transcript_id)
             res = spm.run_query()
-            data_sets.append(res)
+            updated_res = {}   
+            for r in res:
+
+                for i in range(len(spm.exon_coords)):
+                    estart = spm.exon_coords[i][0]
+                    eend = spm.exon_coords[i][1]
+                    if estart <= r < eend:
+			updated_r = r - estart + cum_rel_pos_lookup[(estart, eend)]                 
+			updated_res[updated_r] = res[r]
+            data_sets.append(updated_res)
         return data_sets
 
+    # Deprecated
     def run_motif_search_unbatched(self, motif_id, spm, flank, g):
 
         data_sets = []
@@ -228,34 +248,32 @@ class StructurePlotHandler:
             data_sets.append(res)
         return data_sets
 
-
     def format_report(self, data_sets, interval_length):
 
-       summary = '<table border = "1"><b>\n'
-       summary = summary + '\t<tr><td>pos</td>\n'
+	summary = ''
+	sets = len(data_sets)
+        for x in range(interval_length):
+            summary = summary + '\t<tr><td>%s</td>\n' % (x)
+            for d in range(sets):
+                scores = ('NA', 'NA', 'NA')
+                s0 = 'NA'
+        for x in range(interval_length):
+            summary = summary + '\t<tr><td>%s</td>\n' % (x)
+            for d in range(sets):
+                scores = ('NA', 'NA', 'NA')
+                s0 = 'NA'
+                s1 = 'NA'
+                if data_sets[d].has_key(x):
+                    scores = data_sets[d][x]
+                if scores[0] != 'NA':
+                    s0 = "%.2f" % scores[0]
+                if scores[1] != 'NA':
+                    s1 = "%.2f" % scores[1]
+                summary = summary + '\t\t<td>%s</td><td>%s</td>' % (s0, s1) 
+            summary = summary + '\t</tr>'
 
-       for s in self.sources:
-           summary = summary + '\t\t<td>%s Avg</td><td>%s StDev</td>' % (self.structure_sources[s], self.structure_sources[s])
-       summary = summary + '\t</tr></b>\n'
-       sets = len(data_sets)
-
-       for x in range(interval_length):
-           summary = summary + '\t<tr><td>%s</td>\n' % (x)
-           for d in range(sets):
-               scores = ('NA', 'NA', 'NA')
-               s0 = 'NA'
-               s1 = 'NA'
-               if data_sets[d].has_key(x):
-                   scores = data_sets[d][x]
-               if scores[0] != 'NA':
-                   s0 = "%.2f" % scores[0]
-               if scores[1] != 'NA':
-                   s1 = "%.2f" % scores[1]
-               summary = summary + '\t\t<td>%s</td><td>%s</td>' % (s0, s1) 
-           summary = summary + '\t</tr>'
-
-       summary += '</table>'
-       return summary
+        summary += '</table>'
+        return summary
 
 
     def format_for_load(self, data_sets, interval_length, genome_pos_list=None):
@@ -317,6 +335,7 @@ class StructurePlotHandler:
             # Organize the data into lists with missing values filled in
             plot_sds[source_name] = [None] * interval_length
             for y in data_set.keys():
+
                 plot_averages[source_name][y] = data_set[y][0]
                 plot_sds[source_name][y] = data_set[y][1]
                 score_sum += data_set[y][0]
@@ -334,7 +353,6 @@ class StructurePlotHandler:
             else:
                     scale = 1
 
-            print scale
             for s in range(len(plot_averages[source_name])):
                 if plot_averages[source_name][s] != None and valid_scores > 0:
                     plot_averages[source_name][s] = (plot_averages[source_name][s] - offset)/scale
@@ -385,7 +403,7 @@ if __name__ == "__main__":
      sph = StructurePlotHandler()
 
      if not args.bed_file and not coord_entered and not args.transcript_id: 
-         print "please enter genomic coordinates, and RBP motif ID or a bed file"
+         print "please enter genomic coordinates, a transcript ID or a bed file"
          sys.exit()
 
      if  args.bed_file and coord_entered :
@@ -393,7 +411,7 @@ if __name__ == "__main__":
          sys.exit()
 
      if not args.genome:
-         print "please specify a genome (hs or mm)"
+         print "please specify a genome (hs, mm, or at)"
          sys.exit()
 
      if not args.outfile_prefix:

@@ -6,7 +6,7 @@
 # database. Currently supports
 # - genomic coordinate queries
 # - bedfile upload queries
-# - gene id queries
+# - transcript id queries
 
 
 import MySQLdb as mdb
@@ -20,6 +20,9 @@ class StructurePlotMaker:
 		self.bed_intervals = []
 		self.genomic_coords = []
 		self.interval_len = 0
+
+		# used for transcript mode
+		self.exon_coords = []
 
 		"""
 		# Deprecated code for displaying the nucleotide
@@ -87,27 +90,30 @@ class StructurePlotMaker:
 	def transid_to_query(self, trans_id, source_id):
 
 		self.query = """
-				SELECT ss.pos - x.start as relpos, 'N', ss.score, -1 FROM structure_score ss 
+				SELECT ss.pos, 'N', ss.score, -1 FROM structure_score ss 
 				JOIN transcript x 
 				ON ss.chrom = x.chrom AND ss.pos BETWEEN x.start AND x.end 
 				WHERE trans_id = '%s' and ss.source_id = %s
-				ORDER BY start;""" % (trans_id, source_id) 	
+				ORDER BY pos;""" % (trans_id, source_id) 	
+
+		#print self.query
 
 	def get_abs_exon_coords(self, trans_id):
 		cursor = self.con.cursor()
 		x_len_query = "SELECT start, end, strand FROM transcript WHERE trans_id = '%s' ORDER BY start" % (trans_id)
 		cursor.execute(x_len_query)
 		res = cursor.fetchall()
-		
 		for r in res:
-			self.genomic_coords = self.genomic_coords + range(r[0], r[1])			
+			(ex_start, ex_end) = (r[0], r[1] + 1)
+			self.genomic_coords += range(ex_start, ex_end)
+			self.exon_coords.append((ex_start, ex_end))		
 		self.interval_len = len(self.genomic_coords)
 
 	def run_query(self):
 		cursor = self.con.cursor()
+
 		cursor.execute(self.query)
 		res = cursor.fetchall()
-		#print res
 		data_set = {}
 		for r in res:
                         n = 'N'
