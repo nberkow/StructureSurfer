@@ -20,7 +20,7 @@ Alternately, you can create an empty Structure Surfur database for your own data
 Both methods make a database with three tables:
 >structure_score - RNA secondary structure scores with genomic coordinates
 
->structure_source - The experiments that generates the scores
+>structure_source - The experiments that generated the scores
 
 >transcript - Exon coordinates for transcripts
 
