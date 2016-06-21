@@ -54,6 +54,6 @@ In some cases it's useful to take several regions of interest and find the avera
 ###### Get scores from an annotated transcript
 >python2.7 makeStructurePlot.py -t AT3G61897.1 -g at -pfx my_output_file
 
--t Transcript ID. This must be a transcript ID that exists in the transcript table
+-t Transcript ID. This must be a transcript ID that exists in the transcript table. The download from pennbox has IDs from NCBI, PDB and The Arabidopsis Information Resource. 
 
 
