@@ -12,7 +12,6 @@
 #
 
 import StructurePlotMaker
-import MotifStructureTool
 import os.path
 import pygal
 from pygal.style import DefaultStyle
