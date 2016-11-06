@@ -5,22 +5,22 @@ Structure Surfer is a web tool for scientists who want to browse RNA secondary s
 
 http://tesla.pcbi.upenn.edu/structuresurfer
 
-This repository contains a mySQL dump file for users who want to install it themselves rather than use the web tool. It also contains the Python script that the webtool uses to browse the database.
+This repository contains the Python script that the webtool uses to browse the database. It also contains a MySQL dump describing the tables.
 
 #### Creating The Database
-The full Structure Surfur database is available as mySQL dump file at pennbox. No login is required.
+The full Structure Surfur database is available as MySQL dump file at pennbox. No login is required.
 
 https://upenn.app.box.com/s/1kj2f1w994sp3jmaakqhy9cw2w11vajk
 
 You will need mySQL installed and a user account with the ability to GRANT SELECT priviledges. Run this command:
 >mysql -p < structure_surfer.mysql
 
-Alternately, you can create an empty Structure Surfur database for your own data with the mySQL dump file in this folder.
+Alternately, you can create an empty Structure Surfur database for your own data with the MySQL dump file in this folder.
 
 Both methods make a database with three tables:
 >structure_score - RNA secondary structure scores with genomic coordinates
 
->structure_source - The experiments that generates the scores
+>structure_source - The experiments that generated the scores
 
 >transcript - Exon coordinates for transcripts
 
@@ -54,6 +54,6 @@ In some cases it's useful to take several regions of interest and find the avera
 ###### Get scores from an annotated transcript
 >python2.7 makeStructurePlot.py -t AT3G61897.1 -g at -pfx my_output_file
 
--t Transcript ID. This must be a transcript ID that exists in the transcript table
+-t Transcript ID. This must be a transcript ID that exists in the transcript table. The download from pennbox has IDs from NCBI, PDB and The Arabidopsis Information Resource. 
 
 
